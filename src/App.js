@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { getPopularMovies } from "./services/dataService";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [movies, setData] = useState([]);
+
+    const fetchData = async () => {
+        const result = await getPopularMovies();
+        setData(result.results);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    return (
+        <ul>
+            {movies.map(item => (
+                <li key={item.id}>
+                    <a href={item.url}>{item.title}</a>
+                </li>
+            ))}
+        </ul>
+    );
 }
 
 export default App;
